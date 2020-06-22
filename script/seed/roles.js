@@ -6,7 +6,7 @@ module.exports = {
 
 		console.log('Seeding Roles...');
 
-		const rolesArr = [{ name: 'Moderator' }, { name: 'Admin' }, { name: 'Test' }];
+		const rolesArr = [{ name: 'Moderator' }, { name: 'Admin' }];
 		
 		let added = false;
 		for (let newRole of rolesArr) {
