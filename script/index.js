@@ -12,17 +12,16 @@ mongoose.connect(process.env.MONGODB_URI || mongo_url, {
 })
 .then(() => {
 
-	console.log('Seeding starting...');
-
 	const { generateRoles } = require('./seed/roles');
+	const { addRole } = require('./seed/addRole');
 
 	(async function() {
 
 		await generateRoles();
 
-	})();
+		await addRole();
 
-	console.log('Seeding done...');
+	})();
 
 })
 .catch(err => console.error(`Could not connect to DB ${err}`));

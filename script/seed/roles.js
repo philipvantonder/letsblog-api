@@ -4,8 +4,6 @@ module.exports = {
 	
 	generateRoles: async () => {
 
-		console.log('Seeding Roles...');
-
 		const rolesArr = [{ name: 'Moderator' }, { name: 'Admin' }];
 		
 		let added = false;
@@ -31,5 +29,6 @@ module.exports = {
 		if (!added) {
 			console.log('There was no new roles added.');
 		}
+		
 	}
 }
