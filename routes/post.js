@@ -315,4 +315,25 @@ router.route('/postsReview').get(isLoggedIn, isModerator, async (req, res, next)
 
 });
 
+/**
+ * @route GET api/posts/reviewBlogPostSlug/:slug
+ * @desc fetch single review blog post using slug.
+ * @access private
+ */
+router.route('/reviewBlogPostSlug/:slug').get(isLoggedIn, isModerator, async (req, res, next) => { 	
+
+	await handle(async () => {
+
+		const { slug } = req.params;
+		
+		const { post } = await PostService.getReviewBlogPostBySlug(slug);
+		
+		res.status(200).send({ post });
+
+		res.end();
+
+	}, next);
+
+});
+
 module.exports = router;

@@ -213,6 +213,36 @@ module.exports = {
 
 		return { posts };
 
-	}
+	},
+
+	getReviewBlogPostBySlug: async (slug) => {
+
+		const postsArr = await PostsModel.find({ slug: slug });
+		
+		const posts = [];
+
+		for (let post of postsArr) {
+
+			const AuthorObj = await UsersModel.findById({ _id: post.user });
+	
+			const postObj = {
+				id: post._id,
+				body: post.body,
+				title: post.title,
+				slug: post.slug,
+				datePublished: moment(post.createdAt).format('MMMM Do YYYY'),
+				reviewed: post.reviewed,
+				authorId: AuthorObj._id,
+				authorPicture: AuthorObj.profileImage,
+				author: `${AuthorObj.name} ${AuthorObj.surname}`
+			};
+
+			posts.push(postObj);
+
+		}
+
+		return { post: posts };
+
+	},
 
 };
