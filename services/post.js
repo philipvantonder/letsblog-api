@@ -217,32 +217,24 @@ module.exports = {
 
 	getReviewBlogPostBySlug: async (slug) => {
 
-		const postsArr = await PostsModel.find({ slug: slug });
+
+		const postObj = await PostsModel.findOne({ slug: slug });
 		
-		const posts = [];
+		const AuthorObj = await UsersModel.findById({ _id: postObj.user });
 
-		for (let post of postsArr) {
+		const post = {
+			id: postObj._id,
+			body: postObj.body,
+			title: postObj.title,
+			datePublished: moment(postObj.createdAt).format('MMMM Do YYYY'),
+			reviewed: postObj.reviewed,
+			authorId: AuthorObj._id,
+			authorPicture: AuthorObj.profileImage,
+			author: `${AuthorObj.name} ${AuthorObj.surname}`
+		};
 
-			const AuthorObj = await UsersModel.findById({ _id: post.user });
-	
-			const postObj = {
-				id: post._id,
-				body: post.body,
-				title: post.title,
-				slug: post.slug,
-				datePublished: moment(post.createdAt).format('MMMM Do YYYY'),
-				reviewed: post.reviewed,
-				authorId: AuthorObj._id,
-				authorPicture: AuthorObj.profileImage,
-				author: `${AuthorObj.name} ${AuthorObj.surname}`
-			};
-
-			posts.push(postObj);
-
-		}
-
-		return { post: posts };
-
-	},
+		return { post };
+		
+	}
 
 };
