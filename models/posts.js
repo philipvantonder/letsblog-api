@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const PostsSchema = new mongoose.Schema({
-    title: String,
+    title: String,	
 	body: String,
 	slug: {
 		type: String,
@@ -24,6 +24,10 @@ const PostsSchema = new mongoose.Schema({
 	},
 	tags: {
 		type: Array
+	},
+	inReview: {
+		type: Boolean,
+		default: false
 	},
 	reviewed: {
 		type: Boolean,

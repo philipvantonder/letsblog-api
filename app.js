@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 const cors = require('cors');
 const app = express();
-const morgan = require('morgan');
+// const morgan = require('morgan');
 
 const PostRoute = require('./routes/post');
 const UserRoute = require('./routes/user');
@@ -29,7 +29,7 @@ mongoose.connect(process.env.MONGODB_URI || mongo_url, {
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
 
 app.use('/api/posts', PostRoute);
 app.use('/api/users', UserRoute);

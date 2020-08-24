@@ -86,7 +86,7 @@ module.exports = {
 			title: postDTO.title,
 			body: postDTO.body,
 			fileName: postDTO.filename,
-			isPublished: postDTO.isPublished,
+			inReview: postDTO.inReview,
 			slug: postDTO.slug,
 			category: postDTO.category,
 			tags: tagsArr,
@@ -123,6 +123,9 @@ module.exports = {
 		post.slug = postDTO.slug;
 		post.category = postDTO.category;
 		post.tags = tagsArr;
+
+		post.reviewed = postDTO.reviewed;
+		post.inReview = postDTO.inReview;
 
 		// check if a new file are being uploaded.
 		if (postDTO.fileName !== undefined) {
@@ -176,10 +179,12 @@ module.exports = {
 	updateReview: async(postDTO) => {
 
 		const { id, review } = postDTO;
-		
+
 		await PostsModel.updateOne({ _id: id }, {
 			$set: {
-				reviewed: review
+				reviewed: review,
+				inReview: false,
+				isPublished
 			}
 		});
 
@@ -187,7 +192,7 @@ module.exports = {
 
 	getPostsforReview: async() => {
 
-		const postsArr = await PostsModel.find().sort({ createdAt: 'desc' });
+		const postsArr = await PostsModel.find({ inReview: true }).sort({ createdAt: 'desc' });
 		
 		const posts = [];
 
@@ -216,7 +221,6 @@ module.exports = {
 	},
 
 	getReviewBlogPostBySlug: async (slug) => {
-
 
 		const postObj = await PostsModel.findOne({ slug: slug });
 		
