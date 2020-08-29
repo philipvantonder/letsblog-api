@@ -160,7 +160,7 @@ router.route('/create').post(isLoggedIn, fileUpload.single('file'), async (req, 
 });
 
 /**
- * @route GET api/posts/image/:id/:file
+ * @route GET api/posts/image/:id
  * @desc fetch blog post image.
  * @access Public
  */
