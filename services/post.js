@@ -184,7 +184,6 @@ module.exports = {
 			$set: {
 				reviewed: review,
 				inReview: false,
-				isPublished
 			}
 		});
 
