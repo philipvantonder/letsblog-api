@@ -21,6 +21,7 @@ mongoose.connect(process.env.MONGODB_URI || mongo_url, {
 
 		await addRole();
 
+		process.exit(1);
 	})();
 
 })

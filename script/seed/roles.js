@@ -20,7 +20,7 @@ module.exports = {
 				
 				rolesModelObj.save();
 
-				console.log(`${newRole.name} was added.`);
+				console.log(`New ${newRole.name} role added.`);
 
 			}
 			

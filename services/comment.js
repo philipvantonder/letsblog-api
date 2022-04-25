@@ -99,8 +99,13 @@ module.exports = {
 
 		const getLike = await LikesModel.findOne({ comment: postDTO.commentId, user: userId });
 
-		if (!getLike) {
-			
+		if (getLike) {			
+			await LikesModel.updateOne({ comment: postDTO.commentId, user: userId }, {
+				$set: {
+					like: postDTO.value
+				}
+			});
+		} else {
 			const like = new LikesModel({
 				comment: postDTO.commentId,
 				user: userId,
@@ -108,15 +113,6 @@ module.exports = {
 			});
 			
 			await like.save();
-			
-		} else {
-
-			await LikesModel.updateOne({ comment: postDTO.commentId, user: userId }, {
-				$set: {
-					like: postDTO.value
-				}
-			});
-
 		}
 
 	},
