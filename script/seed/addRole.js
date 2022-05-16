@@ -28,7 +28,7 @@ module.exports = {
 						role: role._id,
 					});
 					
-					rolesModelObj.save();
+					await rolesModelObj.save();
 					
 					console.log(`New user role added: ${newRole.name} added for ${user.email}.`);
 				}
