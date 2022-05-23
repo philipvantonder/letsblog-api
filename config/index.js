@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
-dotenv.config();
 
+dotenv.config();
 [
 	'NODE_ENV',
 ].forEach((name) => {
@@ -17,5 +17,9 @@ module.exports = {
 	sendgrid_api_key: process.env.SENDGRID_API_KEY,
 	from_email: process.env.FROM_EMAIL,
 	client_url: process.env.CLIENT_URL,
-	test_user_email: process.env.TEST_USER_EMAIL
+	test_user_email: process.env.TEST_USER_EMAIL,
+	aws_bucket_name: process.env.AWS_BUCKET_NAME,
+	aws_bucket_region: process.env.AWS_BUCKET_REGION,
+	aws_access_key: process.env.AWS_ACCESS_KEY,
+	aws_secret_key: process.env.AWS_SECRET_KEY,
 }
