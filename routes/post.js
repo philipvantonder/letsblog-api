@@ -1,77 +1,16 @@
 const PostService = require('../services/post');
 const UserService = require('../services/user');
+const AWSService = require('../services/aws');
 
 const fs = require('fs');
 const express = require('express');
 const path = require('path');
-const multer = require('multer');
 
 const { isLoggedIn, isModerator } = require('./middleware/authentication');
 const router = express.Router();
 const { handle } = require('../utils/error-handling/request-handler');
 
-var postsImageDir;
-
-var storage = multer.diskStorage({
-
-	destination: async function (req, file, cb) {
-
-		const token = req.headers['authorization'];
-
-		const { user } = await UserService.getUserByToken(token);
-
-		postsImageDir = 'images/blog/' + user.id;
-
-		if (!fs.existsSync(postsImageDir)) {
-			fs.mkdirSync(postsImageDir, { recursive: true });
-		}
-
-		cb(null, postsImageDir + '/');
-		
-	},
-	
-	filename: function (req, file, cb) {
-
-		var originalname = file.originalname;
-		if (fs.existsSync(postsImageDir + '/' + originalname)) {
-			let fileName = path.parse(originalname).name;
-			let fileExtension = path.parse(originalname).ext;
-			originalname = fileName + '-' + Date.now() + fileExtension;
-		}
-
-		cb(null, originalname);
-	}
-	
-});
-
-const fileFilter = (req, file, cb) => {
-
-	const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-
-	if (!allowedTypes.includes(file.mimetype)) {
-		const error = new Error('Incorrect file type');
-		error.code = "INCORRECT_FILETYPE";
-
-		return cb(error, false);
-	}
-
-	cb(null, true)
-
-}
-
-const fileUpload = multer({ 
-	
-	storage: storage, 
-	
-	fileFilter,
-	
-	limits: {
-
-		fileSize: 500000
-
-	}
-
-});
+const singleUpload = AWSService.single('file');
 
 /**
  * @route GET api/posts/user
@@ -141,15 +80,38 @@ router.route('/slug/:slug').get(async (req, res, next) => {
  * @desc Create new blog post.
  * @access Private
  */
-router.route('/create').post(isLoggedIn, fileUpload.single('file'), async (req, res, next) => {
+router.route('/create').post(isLoggedIn, async (req, res, next) => {
 
 	await handle(async () => {
 
 		const token = req.headers['authorization'];
 	
-		const postDTO = { ...req.body, ...req.file };
+		console.log('Hit 1');
 		
-		const { post } = await PostService.create(postDTO, token);
+		let uploadStat = await singleUpload(req, res, function (err) {
+				if (err) {
+					console.log(err);
+					// return res.json({
+					// 	success: false,
+					// 	errors: {
+					// 		title: "Image Upload Error",
+					// 		detail: err.message,
+					// 		error: err,
+					// 	},
+					// });
+					return false;
+				}
+
+				console.log('File upload success');
+				console.log(req.file);
+
+			});
+		// const postDTO = { ...req.body, ...req.file };
+		
+		// const { post } = await PostService.create(postDTO, token);
+
+		console.log(uploadStat);
+		console.log('Hit 2');
 
 		res.status(200).send({ post });
 
@@ -225,19 +187,19 @@ router.route('/post/:id').get(isLoggedIn, async (req, res, next) => {
  * @desc Update blog post.
  * @access Private
  */
-router.route('/update/:id').put(isLoggedIn, fileUpload.single('file'), async (req, res, next) => {
+// router.route('/update/:id').put(isLoggedIn, fileUpload.single('file'), async (req, res, next) => {
 	
-	await handle(async () => {
+// 	await handle(async () => {
 
-		const { id } = req.params;
+// 		const { id } = req.params;
 		
-		await PostService.update(id, req.body);
+// 		await PostService.update(id, req.body);
 		
-		res.end();
+// 		res.end();
 
-	}, next);
+// 	}, next);
 
-});
+// });
 
 /**
  * @route DELETE api/posts/delete:id
