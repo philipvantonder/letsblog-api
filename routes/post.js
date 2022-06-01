@@ -98,17 +98,11 @@ router.route('/create').post(isLoggedIn, async (req, res, next) => {
 			
 			const { post } = await PostService.create(postDTO, token);
 			
-			console.log({ ...postDTO , postId: post._id });
-			
 			await FileService.saveFile({ ...postDTO , postId: post._id });
-			
-			console.log('File upload success');
 			
 			return true;
 
 		});
-		
-		console.log(uploadStat);
 
 		res.status(200).send();
 		
