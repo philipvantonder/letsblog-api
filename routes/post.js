@@ -86,7 +86,7 @@ router.route('/create').post(isLoggedIn, async (req, res, next) => {
 
 		const token = req.headers['authorization'];
 	
-		let uploadStat = await singleUpload(req, res, async function (err) {
+		await singleUpload(req, res, async function (err) {
 
 			if (err) {
 				console.log(err);
@@ -100,8 +100,6 @@ router.route('/create').post(isLoggedIn, async (req, res, next) => {
 			
 			await FileService.saveFile({ ...postDTO , postId: post._id });
 			
-			return true;
-
 		});
 
 		res.status(200).send();
