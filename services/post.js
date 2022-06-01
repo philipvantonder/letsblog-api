@@ -82,6 +82,10 @@ module.exports = {
 		
 		const { user } = await UserService.getUserByToken(token);
 
+		if (!user) {
+			throw new EntityNotFoundError('User', 'User not found');
+		}
+
 		const post = new PostsModel({
 			title: postDTO.title,
 			body: postDTO.body,

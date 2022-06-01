@@ -1,5 +1,5 @@
 const PostService = require('../services/post');
-const UserService = require('../services/user');
+const FileService = require('../services/file');
 const AWSService = require('../services/aws');
 
 const fs = require('fs');
@@ -86,35 +86,32 @@ router.route('/create').post(isLoggedIn, async (req, res, next) => {
 
 		const token = req.headers['authorization'];
 	
-		console.log('Hit 1');
+		let uploadStat = await singleUpload(req, res, async function (err) {
+
+			if (err) {
+				console.log(err);
+				
+				return false;
+			}
+			
+			const postDTO = { ...req.body, ...req.file };
+			
+			const { post } = await PostService.create(postDTO, token);
+			
+			console.log({ ...postDTO , postId: post._id });
+			
+			await FileService.saveFile({ ...postDTO , postId: post._id });
+			
+			console.log('File upload success');
+			
+			return true;
+
+		});
 		
-		let uploadStat = await singleUpload(req, res, function (err) {
-				if (err) {
-					console.log(err);
-					// return res.json({
-					// 	success: false,
-					// 	errors: {
-					// 		title: "Image Upload Error",
-					// 		detail: err.message,
-					// 		error: err,
-					// 	},
-					// });
-					return false;
-				}
-
-				console.log('File upload success');
-				console.log(req.file);
-
-			});
-		// const postDTO = { ...req.body, ...req.file };
-		
-		// const { post } = await PostService.create(postDTO, token);
-
 		console.log(uploadStat);
-		console.log('Hit 2');
 
-		res.status(200).send({ post });
-
+		res.status(200).send();
+		
 		res.end();
 
 	}, next);

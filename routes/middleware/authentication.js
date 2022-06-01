@@ -1,11 +1,12 @@
-const jwt = require('jsonwebtoken');
-const { jwt_secret } = require('../../config/index');
-
-const { InvalidPermissionError, EntityNotFoundError, InvalidTokenError } = require('../../utils/error-handling/custom-errors');
 
 const UsersModel = require('../../models/users');
 const UserRolesModel = require('../../models/userRoles');
 const RolesModel = require('../../models/roles');
+
+const jwt = require('jsonwebtoken');
+const { jwt_secret } = require('../../config/index');
+
+const { InvalidPermissionError, EntityNotFoundError, InvalidTokenError } = require('../../utils/error-handling/custom-errors');
 
 module.exports = {
 
